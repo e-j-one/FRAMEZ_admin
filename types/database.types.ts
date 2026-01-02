@@ -548,6 +548,85 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          action: Database["public"]["Enums"]["moderation_action"]
+          action_notes: string | null
+          created_at: string
+          details: string | null
+          id: string
+          reason: Database["public"]["Enums"]["report_reason"]
+          reporter_id: string
+          status: Database["public"]["Enums"]["report_status"]
+          target_created_at: string | null
+          target_id: string
+          target_owner_id: string | null
+          target_preview: string | null
+          target_type: Database["public"]["Enums"]["report_target_type"]
+          triaged_at: string | null
+          triaged_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          action?: Database["public"]["Enums"]["moderation_action"]
+          action_notes?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: Database["public"]["Enums"]["report_reason"]
+          reporter_id: string
+          status?: Database["public"]["Enums"]["report_status"]
+          target_created_at?: string | null
+          target_id: string
+          target_owner_id?: string | null
+          target_preview?: string | null
+          target_type: Database["public"]["Enums"]["report_target_type"]
+          triaged_at?: string | null
+          triaged_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["moderation_action"]
+          action_notes?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: Database["public"]["Enums"]["report_reason"]
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["report_status"]
+          target_created_at?: string | null
+          target_id?: string
+          target_owner_id?: string | null
+          target_preview?: string | null
+          target_type?: Database["public"]["Enums"]["report_target_type"]
+          triaged_at?: string | null
+          triaged_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_target_owner_id_fkey"
+            columns: ["target_owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_triaged_by_fkey"
+            columns: ["triaged_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -627,6 +706,7 @@ export type Database = {
             }[]
           }
       is_blocked: { Args: { user_a: string; user_b: string }; Returns: boolean }
+      is_staff: { Args: never; Returns: boolean }
       notify: {
         Args: {
           p_actor_id: string
@@ -649,6 +729,12 @@ export type Database = {
       collection_visibility: "public" | "friends" | "private"
       friend_request_status: "pending" | "accepted" | "rejected"
       gender: "male" | "female" | "other"
+      moderation_action:
+        | "none"
+        | "removed_content"
+        | "warning_sent"
+        | "temp_suspend"
+        | "perm_ban"
       notification_type:
         | "friend_request"
         | "post_like"
@@ -656,6 +742,16 @@ export type Database = {
         | "comment_like"
         | "comment_reply"
       post_visibility: "public" | "friends"
+      report_reason:
+        | "spam"
+        | "harassment"
+        | "hate"
+        | "nudity"
+        | "violence"
+        | "scam"
+        | "other"
+      report_status: "open" | "triaged" | "actioned" | "dismissed"
+      report_target_type: "user" | "post" | "comment"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -790,6 +886,13 @@ export const Constants = {
       collection_visibility: ["public", "friends", "private"],
       friend_request_status: ["pending", "accepted", "rejected"],
       gender: ["male", "female", "other"],
+      moderation_action: [
+        "none",
+        "removed_content",
+        "warning_sent",
+        "temp_suspend",
+        "perm_ban",
+      ],
       notification_type: [
         "friend_request",
         "post_like",
@@ -798,6 +901,17 @@ export const Constants = {
         "comment_reply",
       ],
       post_visibility: ["public", "friends"],
+      report_reason: [
+        "spam",
+        "harassment",
+        "hate",
+        "nudity",
+        "violence",
+        "scam",
+        "other",
+      ],
+      report_status: ["open", "triaged", "actioned", "dismissed"],
+      report_target_type: ["user", "post", "comment"],
     },
   },
 } as const
