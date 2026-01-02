@@ -352,6 +352,110 @@ export type Database = {
           },
         ]
       }
+      notice_reads: {
+        Row: {
+          notice_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          notice_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          notice_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notice_reads_notice_id_fkey"
+            columns: ["notice_id"]
+            isOneToOne: false
+            referencedRelation: "notices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notice_reads_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notices: {
+        Row: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          link_comment_id: string | null
+          link_post_id: string | null
+          recipient_id: string | null
+          scope: string
+          severity: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          link_comment_id?: string | null
+          link_post_id?: string | null
+          recipient_id?: string | null
+          scope: string
+          severity?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          link_comment_id?: string | null
+          link_post_id?: string | null
+          recipient_id?: string | null
+          scope?: string
+          severity?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notices_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notices_link_comment_id_fkey"
+            columns: ["link_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notices_link_post_id_fkey"
+            columns: ["link_post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notices_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           actor_id: string | null
@@ -485,28 +589,28 @@ export type Database = {
       }
       posts: {
         Row: {
-          caption: string | null
+          caption: string
           created_at: string
           id: string
-          image_path: string
+          image_path: string | null
           tags: string[]
           user_id: string
           visibility: Database["public"]["Enums"]["post_visibility"]
         }
         Insert: {
-          caption?: string | null
+          caption: string
           created_at?: string
           id?: string
-          image_path: string
+          image_path?: string | null
           tags?: string[]
           user_id: string
           visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Update: {
-          caption?: string | null
+          caption?: string
           created_at?: string
           id?: string
-          image_path?: string
+          image_path?: string | null
           tags?: string[]
           user_id?: string
           visibility?: Database["public"]["Enums"]["post_visibility"]
@@ -705,6 +809,7 @@ export type Database = {
               visibility: Database["public"]["Enums"]["post_visibility"]
             }[]
           }
+      is_admin: { Args: never; Returns: boolean }
       is_blocked: { Args: { user_a: string; user_b: string }; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
       notify: {

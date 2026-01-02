@@ -30,6 +30,9 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { AlertCircle, CheckCircle, Clock } from "lucide-react"
+import { PostReportDetails } from "./report-contexts/post-details"
+import { UserReportDetails } from "./report-contexts/user-details"
+import { CommentReportDetails } from "./report-contexts/comment-details"
 
 export function ReportsTable() {
     const supabase = createClient()
@@ -176,18 +179,23 @@ export function ReportsTable() {
                                 </div>
                             </div>
 
-                            {/* 2. Target Content */}
+                            {/* 2. Target Content & Context */}
                             <div className="space-y-2">
-                                <h4 className="font-medium leading-none">Target Content ({selectedReport.target_type})</h4>
-                                <div className="border rounded-md p-3 bg-muted/50">
-                                    {selectedReport.target_preview && (
-                                        selectedReport.target_type === 'post' && selectedReport.target_preview.startsWith('http') ? (
-                                            <img src={selectedReport.target_preview} alt="Target" className="w-full h-48 object-cover rounded-md" />
-                                        ) : (
-                                            <p className="text-sm">{selectedReport.target_preview}</p>
-                                        )
+                                <h4 className="font-medium leading-none">Context ({selectedReport.target_type})</h4>
+                                <div className="border rounded-md p-3 bg-muted/10">
+                                    {selectedReport.target_type === 'post' && (
+                                        <PostReportDetails postId={selectedReport.target_id} />
                                     )}
-                                    {!selectedReport.target_preview && <p className="text-sm italic text-muted-foreground">No preview available from backend</p>}
+                                    {selectedReport.target_type === 'user' && (
+                                        <UserReportDetails userId={selectedReport.target_id} />
+                                    )}
+                                    {selectedReport.target_type === 'comment' && (
+                                        <CommentReportDetails commentId={selectedReport.target_id} />
+                                    )}
+                                    {/* Fallback for unknown types */}
+                                    {!['post', 'user', 'comment'].includes(selectedReport.target_type) && (
+                                        <p className="text-sm italic text-muted-foreground">Preview not available for this type.</p>
+                                    )}
                                 </div>
                             </div>
 
