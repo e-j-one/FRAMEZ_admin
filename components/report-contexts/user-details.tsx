@@ -74,9 +74,11 @@ export function UserReportDetails({ userId }: { userId: string }) {
                 <TabsContent value="posts" className="space-y-2">
                     {userData.posts?.map(post => (
                         <div key={post.id} className="flex gap-2 p-2 border rounded">
-                            <div className="h-12 w-12 bg-black rounded overflow-hidden flex-shrink-0">
-                                <img src={getImageUrl(post.image_path) || ''} alt="" className="h-full w-full object-cover" />
-                            </div>
+                            {post.image_path && (
+                                <div className="h-12 w-12 bg-black rounded overflow-hidden flex-shrink-0">
+                                    <img src={getImageUrl(post.image_path) || ''} alt="" className="h-full w-full object-cover" />
+                                </div>
+                            )}
                             <div className="text-sm">
                                 <p className="font-medium line-clamp-1">{post.caption || 'No Caption'}</p>
                                 <p className="text-xs text-muted-foreground">{new Date(post.created_at).toLocaleDateString()}</p>

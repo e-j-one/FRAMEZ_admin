@@ -66,10 +66,13 @@ export function CommentReportDetails({ commentId }: { commentId: string }) {
                 <div className="p-4 border rounded-md bg-muted/30">
                     <h4 className="font-semibold text-xs text-muted-foreground mb-2 uppercase tracking-wide">Context: Parent Post</h4>
                     <div className="flex gap-4">
-                        <div className="h-16 w-16 bg-black rounded overflow-hidden flex-shrink-0">
-                            {/* @ts-ignore */}
-                            <img src={getImageUrl(commentData.post.image_path) || ''} alt="" className="h-full w-full object-cover" />
-                        </div>
+                        {/* @ts-ignore */}
+                        {commentData.post.image_path && (
+                            <div className="h-16 w-16 bg-black rounded overflow-hidden flex-shrink-0">
+                                {/* @ts-ignore */}
+                                <img src={getImageUrl(commentData.post.image_path) || ''} alt="" className="h-full w-full object-cover" />
+                            </div>
+                        )}
                         <div>
                             {/* @ts-ignore */}
                             <p className="font-medium text-sm">@{commentData.post.author?.nickname}</p>

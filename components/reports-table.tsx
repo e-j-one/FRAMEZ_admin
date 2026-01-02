@@ -62,9 +62,27 @@ export function ReportsTable() {
 
     // Update Mutation
     const updateReportMutation = useMutation({
-        mutationFn: async ({ id, status, action, notes }: any) => {
+        mutationFn: async ({ id, status, action, notes, target_type, target_id }: any) => {
+            // 1. Perform Action if needed
+            if (action === 'removed_content') {
+                if (target_type === 'post') {
+                    const { error } = await supabase.from('posts').delete().eq('id', target_id)
+                    if (error) {
+                        console.error('Failed to delete post:', error)
+                        throw new Error('Failed to delete post. Check permissions.')
+                    }
+                } else if (target_type === 'comment') {
+                    const { error } = await supabase.from('comments').delete().eq('id', target_id)
+                    if (error) {
+                        console.error('Failed to delete comment:', error)
+                        throw new Error('Failed to delete comment. Check permissions.')
+                    }
+                }
+            }
+
+            // 2. Update Report Status
             const { error } = await supabase.from('reports').update({
-                status,
+                status: action !== 'none' ? 'actioned' : status, // Auto-complete if action taken
                 action,
                 action_notes: notes,
                 triaged_at: new Date().toISOString(),
@@ -95,7 +113,9 @@ export function ReportsTable() {
             id: selectedReportId,
             status,
             action,
-            notes
+            notes,
+            target_type: selectedReport?.target_type,
+            target_id: selectedReport?.target_id
         })
     }
 

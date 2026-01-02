@@ -57,9 +57,11 @@ export function PostReportDetails({ postId }: { postId: string }) {
             {/* Post Content */}
             <div className="rounded-md border p-4 space-y-3">
                 <h4 className="font-semibold text-sm text-muted-foreground">Reported Post</h4>
-                <div className="aspect-square w-full max-h-[300px] bg-black rounded-md overflow-hidden flex items-center justify-center">
-                    <img src={getImageUrl(post.image_path) || ''} alt="Post" className="h-full object-contain" />
-                </div>
+                {post.image_path && (
+                    <div className="aspect-square w-full max-h-[300px] bg-black rounded-md overflow-hidden flex items-center justify-center">
+                        <img src={getImageUrl(post.image_path) || ''} alt="Post" className="h-full object-contain" />
+                    </div>
+                )}
                 <div className="space-y-1">
                     {/* @ts-ignore */}
                     <p className="text-sm font-medium">@{post.author?.nickname}</p>
