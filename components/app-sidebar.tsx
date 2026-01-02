@@ -8,6 +8,7 @@ import {
     BarChart3,
     Command,
     LogOut,
+    Megaphone,
 } from "lucide-react"
 
 import {
@@ -79,6 +80,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/reports",
             icon: Flag,
             isActive: pathname.startsWith("/reports"),
+        },
+        {
+            title: "Notices",
+            url: "/notices",
+            icon: Megaphone,
+            isActive: pathname.startsWith("/notices"),
         },
     ]
 

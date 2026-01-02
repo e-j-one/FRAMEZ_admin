@@ -17,14 +17,22 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, ShieldAlert, ShieldCheck } from "lucide-react"
+import { MoreHorizontal, ShieldAlert, ShieldCheck, Copy, Check } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
 
 export function UsersTable() {
     const supabase = createClient()
     const queryClient = useQueryClient()
+    const [copiedId, setCopiedId] = useState<string | null>(null)
 
     const { data: users, isLoading } = useQuery({
         queryKey: ['users'],
@@ -51,6 +59,12 @@ export function UsersTable() {
         }
     })
 
+    const handleCopy = (id: string) => {
+        navigator.clipboard.writeText(id)
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
+    }
+
     if (isLoading) {
         return <div className="p-4">Loading users...</div>
     }
@@ -61,8 +75,7 @@ export function UsersTable() {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">Avatar</TableHead>
-                        <TableHead>Nickname</TableHead>
-                        <TableHead>Gender</TableHead>
+                        <TableHead>User Details</TableHead>
                         <TableHead>Role</TableHead>
                         <TableHead>Joined</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
@@ -76,8 +89,31 @@ export function UsersTable() {
                                     <AvatarFallback>{user.nickname?.slice(0, 2).toUpperCase() || 'UN'}</AvatarFallback>
                                 </Avatar>
                             </TableCell>
-                            <TableCell className="font-medium">{user.nickname || 'Anonymous'}</TableCell>
-                            <TableCell>{user.gender || 'Not specified'}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-col gap-1">
+                                    <span className="font-medium">{user.nickname || 'Anonymous'}</span>
+                                    <div className="flex items-center text-xs text-muted-foreground gap-2">
+                                        <span className="font-mono">{user.id.slice(0, 8)}...</span>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-4 w-4"
+                                                        onClick={() => handleCopy(user.id)}
+                                                    >
+                                                        {copiedId === user.id ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>{copiedId === user.id ? 'Copied!' : 'Copy UUID'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </div>
+                                </div>
+                            </TableCell>
                             <TableCell>
                                 <Badge variant={user.role === 'admin' ? 'destructive' : 'secondary'}>
                                     {user.role}
