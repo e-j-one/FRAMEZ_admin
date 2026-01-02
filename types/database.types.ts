@@ -319,21 +319,21 @@ export type Database = {
           conversation_id: string
           created_at: string
           id: string
-          sender_id: string
+          sender_id: string | null
         }
         Insert: {
           content: string
           conversation_id: string
           created_at?: string
           id?: string
-          sender_id: string
+          sender_id?: string | null
         }
         Update: {
           content?: string
           conversation_id?: string
           created_at?: string
           id?: string
-          sender_id?: string
+          sender_id?: string | null
         }
         Relationships: [
           {
@@ -660,7 +660,7 @@ export type Database = {
           details: string | null
           id: string
           reason: Database["public"]["Enums"]["report_reason"]
-          reporter_id: string
+          reporter_id: string | null
           status: Database["public"]["Enums"]["report_status"]
           target_created_at: string | null
           target_id: string
@@ -678,7 +678,7 @@ export type Database = {
           details?: string | null
           id?: string
           reason: Database["public"]["Enums"]["report_reason"]
-          reporter_id: string
+          reporter_id?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           target_created_at?: string | null
           target_id: string
@@ -696,7 +696,7 @@ export type Database = {
           details?: string | null
           id?: string
           reason?: Database["public"]["Enums"]["report_reason"]
-          reporter_id?: string
+          reporter_id?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           target_created_at?: string | null
           target_id?: string
